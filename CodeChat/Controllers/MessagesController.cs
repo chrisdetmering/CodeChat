@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using CodeChat.Models;
+using CodeChat.DataAccess.Models;
 using Microsoft.AspNetCore.SignalR;
 using CodeChat.Hubs;
+using CodeChat.DataAccess.Data;
 
 namespace CodeChat.Controllers
 {
@@ -15,10 +15,10 @@ namespace CodeChat.Controllers
     [ApiController]
     public class MessagesController : ControllerBase
     {
-        private readonly MessageContext _context;
+        private readonly ChatContext _context;
         private readonly IHubContext<ChatHub> _hubContext;
 
-        public MessagesController(MessageContext context, IHubContext<ChatHub> hubContext)
+        public MessagesController(ChatContext context, IHubContext<ChatHub> hubContext)
         {
             _context = context;
             _hubContext = hubContext;
@@ -26,16 +26,18 @@ namespace CodeChat.Controllers
 
         // GET: api/Messages
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Message>>> GetMessages()
+        public async Task<ActionResult<Dictionary<Guid, Message>>> GetMessages()
         {
 
 
-            return await _context.Messages.ToListAsync();
+            return await _context.Messages.ToDictionaryAsync(
+                m => m.Id
+                );
         }
 
         // GET: api/Messages/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Message>> GetMessage(long id)
+        public async Task<ActionResult<Message>> GetMessage(Guid id)
         {
             var message = await _context.Messages.FindAsync(id);
 
@@ -50,7 +52,7 @@ namespace CodeChat.Controllers
         // PUT: api/Messages/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMessage(long id, Message message)
+        public async Task<IActionResult> PutMessage(Guid id, Message message)
         {
             if (id != message.Id)
             {
@@ -83,7 +85,6 @@ namespace CodeChat.Controllers
         [HttpPost]
         public async Task<ActionResult> PostMessage(Message message)
         {
-            Console.WriteLine(message.Text);
             _context.Messages.Add(message);
             await _context.SaveChangesAsync();
             await _hubContext.Clients.All.SendAsync("broadcastMessage", message);
@@ -93,7 +94,7 @@ namespace CodeChat.Controllers
 
         // DELETE: api/Messages/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMessage(long id)
+        public async Task<IActionResult> DeleteMessage(Guid id)
         {
             var message = await _context.Messages.FindAsync(id);
             if (message == null)
@@ -107,7 +108,7 @@ namespace CodeChat.Controllers
             return NoContent();
         }
 
-        private bool MessageExists(long id)
+        private bool MessageExists(Guid id)
         {
             return _context.Messages.Any(e => e.Id == id);
         }

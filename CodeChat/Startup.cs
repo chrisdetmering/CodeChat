@@ -1,14 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using CodeChat.Models;
 using CodeChat.Hubs;
+using CodeChat.DataAccess.Data;
 
 namespace CodeChat
 {
@@ -32,8 +30,10 @@ namespace CodeChat
                 configuration.RootPath = "ClientApp/build";
             });
             services.AddSignalR();
-            services.AddDbContext<MessageContext>(opt =>
-                                                  opt.UseInMemoryDatabase("MessageList"));
+            services.AddDbContext<ChatContext>(options =>
+            {
+                options.UseNpgsql("Host=localhost;Database=code_chat;Username=postgres;Password=ChrisSQL");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
