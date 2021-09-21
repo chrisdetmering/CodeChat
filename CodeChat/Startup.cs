@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using CodeChat.Hubs;
 using CodeChat.DataAccess.Data;
+using CodeChat.Services;
 
 namespace CodeChat
 {
@@ -23,7 +24,7 @@ namespace CodeChat
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-
+            services.AddScoped<IUserService, UserService>();
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -32,7 +33,7 @@ namespace CodeChat
             services.AddSignalR();
             services.AddDbContext<ChatContext>(options =>
             {
-                options.UseNpgsql("Host=localhost;Database=code_chat;Username=postgres;Password=ChrisSQL");
+                options.UseNpgsql("Host=localhost;Database=code_chat;Username=postgres;Password=ChrisSQL;Include Error Detail=true");
             });
         }
 

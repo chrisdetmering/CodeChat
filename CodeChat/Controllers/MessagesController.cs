@@ -8,6 +8,8 @@ using CodeChat.DataAccess.Models;
 using Microsoft.AspNetCore.SignalR;
 using CodeChat.Hubs;
 using CodeChat.DataAccess.Data;
+using CodeChat.Services;
+using CodeChat.DTOs;
 
 namespace CodeChat.Controllers
 {
@@ -17,11 +19,13 @@ namespace CodeChat.Controllers
     {
         private readonly ChatContext _context;
         private readonly IHubContext<ChatHub> _hubContext;
+        private readonly IUserService _userService;
 
-        public MessagesController(ChatContext context, IHubContext<ChatHub> hubContext)
+        public MessagesController(ChatContext context, IHubContext<ChatHub> hubContext, IUserService userService) 
         {
             _context = context;
             _hubContext = hubContext;
+            _userService = userService;
         }
 
         // GET: api/Messages
@@ -83,13 +87,32 @@ namespace CodeChat.Controllers
         // POST: api/Messages
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult> PostMessage(Message message)
+        public async Task<ActionResult> PostMessage(MessageDTO messageDTO)
         {
-            _context.Messages.Add(message);
-            await _context.SaveChangesAsync();
-            await _hubContext.Clients.All.SendAsync("broadcastMessage", message);
+            try
+            {
+                var sessionToken = HttpContext.Request.Cookies["sessionToken"];
+                var user = _userService.FindUserBySessionToken(sessionToken);
 
-            return CreatedAtAction("GetMessage", new { id = message.Id });
+                var message = new Message
+                {
+                    Text = messageDTO.Text,
+                    ChannelId = Guid.Parse(messageDTO.ChannelId),
+                    UserId = user.Id
+                };
+
+            
+                _context.Messages.Add(message);
+                await _context.SaveChangesAsync();
+                await _hubContext.Clients.All.SendAsync("broadcastMessage", message);
+
+                return CreatedAtAction("GetMessage", new { id = message.Id });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = $"{ex.Message}" });
+            }
+            
         }
 
         // DELETE: api/Messages/5

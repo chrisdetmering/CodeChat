@@ -1,26 +1,28 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CodeChat.DataAccess.Data;
 using CodeChat.DataAccess.Models;
 using CodeChat.DTOs;
-using System.Security.Cryptography;
+using CodeChat.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace CodeChat.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController : CustomApiController
     {
         
         private readonly ChatContext _context;
+        private readonly IUserService _userService;
 
-        public UsersController(ChatContext context)
+        public UsersController(ChatContext context, IUserService userService)
         {
             _context = context;
+            _userService = userService;
         }
 
         // GET: api/Users
@@ -48,86 +50,54 @@ namespace CodeChat.Controllers
 
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(Guid id, User user)
-        {
-            if (id != user.Id)
-            {
-                return BadRequest();
-            }
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutUser(Guid id, User user)
+        //{
+        //    if (id != user.Id)
+        //    {
+        //        return BadRequest();
+        //    }
 
-            _context.Entry(user).State = EntityState.Modified;
+        //    _context.Entry(user).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!_userService.UserExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return NoContent();
-        }
+        //    return NoContent();
+        //}
 
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(UserCredentialsDTO userCredentials)
+        public async Task<ActionResult<UserLoggedInDTO>> PostUser(UserCredentialsDTO userCredentials)
         {
-            
-
-            if (UserExistsByUserName(userCredentials.Username))
-            {
-                return Conflict(new { message = "Username already exists" });
-            }
-            
-      
-            if (!IsValidPassword(userCredentials.Password))
-            {
-                return BadRequest(new { message = "Invalid password" });
-            }
-
-            var passwordDigest = BCrypt.Net.BCrypt.HashPassword(userCredentials.Username);
-
-            //Generates sessionToken
-            var sessionToken = CreateSessionToken();
-
-            var user = new User
-            {
-                Username = userCredentials.Username,
-                PasswordDigest = passwordDigest,
-                SessionToken = sessionToken
-            };
+            User user;
 
             try
             {
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
+                user = await _userService.CreateUserAsync(userCredentials);
+            } catch(Exception ex)
             {
-                if (!UserExistsByUserName(user.Username))
-                {
-                    return BadRequest(new { message = $"{ex}" });
-                }
-
-                throw;
-      
+                return BadRequest(new { message = ex.Message });
             }
 
-            var userDTO = new UserLoggedInDTO()
-            {
-                Username = user.Username,
-                SessionToken = user.SessionToken,
-            };
+
+            AddSessionTokenToCookies(user.SessionToken, HttpContext);
+
+            var userDTO = _userService.ToDTO(user);
 
             return CreatedAtAction("GetUser", new { id = user.Id }, userDTO);
         }
@@ -148,28 +118,8 @@ namespace CodeChat.Controllers
             return NoContent();
         }
 
-        private bool UserExists(Guid id)
-        {
-            return _context.Users.Any(e => e.Id == id);
-        }
+        
 
-        private bool UserExistsByUserName(string username)
-        {
-            return _context.Users.Any(e => e.Username == username);
-        }
-
-        private static bool IsValidPassword(string password) {
-
-            return password.Length >= 8; 
-        }
-
-        private static string CreateSessionToken()
-        {
-            var crypt = new RNGCryptoServiceProvider();
-            var buf = new byte[10];
-            crypt.GetBytes(buf);
-            crypt.Dispose();
-            return Convert.ToBase64String(buf);
-        }
+      
     }
 }
