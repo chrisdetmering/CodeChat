@@ -30,12 +30,28 @@ namespace CodeChat.Controllers
 
         // GET: api/Messages
         [HttpGet]
-        public async Task<ActionResult<Dictionary<Guid, Message>>> GetMessages()
+        public async Task<ActionResult<Dictionary<Guid, MessageDTOResponse>>> GetMessages()
         {
+            var sessionToken = HttpContext.Request.Cookies["sessionToken"];
 
+            var user = _userService.FindUserBySessionToken(sessionToken);
+
+            if (user == null)
+            {
+                return Unauthorized(new { message = "You are unauthorized" });
+            }
 
             return await _context.Messages.ToDictionaryAsync(
-                m => m.Id
+                    m => m.Id,
+                    m =>
+                    {
+                        return new MessageDTOResponse
+                        {
+                            Id = m.Id,
+                            ChannelId = m.ChannelId,
+                            Text = m.Text
+                        };
+                    }
                 );
         }
 
@@ -43,6 +59,13 @@ namespace CodeChat.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Message>> GetMessage(Guid id)
         {
+
+            var sessionToken = HttpContext.Request.Cookies["sessionToken"];
+            if (!_userService.IsAuthorized(sessionToken))
+            {
+                return Unauthorized(new { message = "You are unauthorized" });
+            }
+
             var message = await _context.Messages.FindAsync(id);
 
             if (message == null)
@@ -58,6 +81,13 @@ namespace CodeChat.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMessage(Guid id, Message message)
         {
+
+            var sessionToken = HttpContext.Request.Cookies["sessionToken"];
+            if (!_userService.IsAuthorized(sessionToken))
+            {
+                return Unauthorized(new { message = "You are unauthorized" });
+            }
+
             if (id != message.Id)
             {
                 return BadRequest();
@@ -89,9 +119,16 @@ namespace CodeChat.Controllers
         [HttpPost]
         public async Task<ActionResult> PostMessage(MessageDTO messageDTO)
         {
+            var sessionToken = HttpContext.Request.Cookies["sessionToken"];
+
+            if (!_userService.IsAuthorized(sessionToken))
+            {
+                return Unauthorized(new { message = "You are unauthorized" });
+            }
+
             try
             {
-                var sessionToken = HttpContext.Request.Cookies["sessionToken"];
+                
                 var user = _userService.FindUserBySessionToken(sessionToken);
 
                 var message = new Message
@@ -119,6 +156,15 @@ namespace CodeChat.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMessage(Guid id)
         {
+
+            var sessionToken = HttpContext.Request.Cookies["sessionToken"];
+            if (!_userService.IsAuthorized(sessionToken))
+            {
+                return Unauthorized(new { message = "You are unauthorized" });
+            }
+
+
+
             var message = await _context.Messages.FindAsync(id);
             if (message == null)
             {

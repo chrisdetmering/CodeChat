@@ -9,6 +9,7 @@ namespace CodeChat.Controllers
     {
         public CustomApiController() : base()
         {
+        
         }
 
         public static void AddSessionTokenToCookies(string sessionToken, HttpContext httpContext)
@@ -30,5 +31,6 @@ namespace CodeChat.Controllers
             return Convert.ToBase64String(buf);
         }
 
+       
     }
 }

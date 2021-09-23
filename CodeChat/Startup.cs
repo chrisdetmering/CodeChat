@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using CodeChat.Hubs;
 using CodeChat.DataAccess.Data;
 using CodeChat.Services;
+using System.Text.Json.Serialization;
 
 namespace CodeChat
 {
@@ -35,6 +36,10 @@ namespace CodeChat
             {
                 options.UseNpgsql("Host=localhost;Database=code_chat;Username=postgres;Password=ChrisSQL;Include Error Detail=true");
             });
+            //services.AddMvc().AddJsonOptions(o =>
+            //{
+            //    o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

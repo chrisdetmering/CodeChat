@@ -6,4 +6,12 @@ namespace CodeChat.DTOs
         public string Text { get; set; }
         public string ChannelId { get; set; }
     }
+
+
+    public class MessageDTOResponse
+    {
+        public Guid Id { get; set; }
+        public string Text { get; set; }
+        public Guid ChannelId { get; set; }
+    }
 }

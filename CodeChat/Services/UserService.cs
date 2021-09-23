@@ -17,6 +17,7 @@ namespace CodeChat.Services
         Task<User> LoginUser(UserCredentialsDTO userCredentials);
         User FindUserBySessionToken(string sessionToken);
         UserLoggedInDTO ToDTO(User user);
+        bool IsAuthorized(string sessionToken);
     }
 
 
@@ -100,6 +101,18 @@ namespace CodeChat.Services
 
             return user;
         }
+
+        public bool IsAuthorized(string sessionToken) {
+            var user = FindUserBySessionToken(sessionToken);
+            if (user == null )
+            {
+                return false; 
+            } else
+            {
+                return true; 
+            }
+        }
+
 
         public User FindUserBySessionToken(string sessionToken)
         {
