@@ -127,6 +127,7 @@ namespace CodeChat.Services
         public UserLoggedInDTO ToDTO(User user) {
             var userDTO = new UserLoggedInDTO()
             {
+                Id = user.Id.ToString(),
                 Username = user.Username
             };
 

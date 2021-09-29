@@ -1,17 +1,34 @@
 import * as React from 'react';
-import { Route } from 'react-router';
+import { Redirect, Route } from 'react-router';
 import Layout from './components/Layout';
-import Counter from './components/Counter';
-import FetchData from './components/FetchData';
 import ChannelsContainer from './components/Channels/ChannelsContainer';
-
-
+import SignUpContainer from "./components/SignUp/SignUpContainer";
 import './custom.css'
+import LoginContainer from './components/Login/LoginContainer';
+import { connect } from 'react-redux';
+import { selectUserByCurrentUserId } from './store/SharedDerivedStateSelectors/selectCurrentUser';
+import { ApplicationState } from './store';
 
-export default () => (
-    <Layout>
-        <Route exact path='/' component={ChannelsContainer} />
-        <Route path='/counter' component={Counter} />
-        <Route path='/fetch-data/:startDateIndex?' component={FetchData} />
-    </Layout>
-);
+function App(props: any) {
+    console.log(props.currentUser)
+    return (
+        <Layout>
+            <Route exact path='/' component={LoginContainer} />
+            <Route path='/signup' component={SignUpContainer} />
+            <Route
+                path='/channels'
+                render={(routeProps => {
+                    if (props.currentUser) {
+                        return <ChannelsContainer {...routeProps} />
+                    } else {
+                        return <Redirect to="/signup" />
+                    }
+                })} />
+        </Layout>
+    );
+}
+
+const mapStateToProps = (state: ApplicationState) => ({ currentUser: selectUserByCurrentUserId(state) })
+
+
+export default connect(mapStateToProps)(App)

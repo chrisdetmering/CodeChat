@@ -43,9 +43,9 @@ export const requestMessages = (): AppThunkAction<KnownAction> => async (dispatc
     try {
         const response = await fetch(`/api/messages`)
         const messages = await response.json() as Message[]
-        dispatch({ type: 'RECEIVE_MESSAGES', messages })
+        dispatch({ type: 'RECEIVE_MESSAGES', messages: [] })
     } catch (error) {
-        //TODO: dispatch error 
+        //TODO: dispatch error
     }
 }
 

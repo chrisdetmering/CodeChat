@@ -14,8 +14,6 @@ namespace CodeChat.Controllers
 
         public static void AddSessionTokenToCookies(string sessionToken, HttpContext httpContext)
         {
-
-
             httpContext.Response.Cookies.Append("sessionToken", sessionToken, new CookieOptions
             {
                 Expires = DateTime.Now.AddDays(1)
@@ -30,7 +28,5 @@ namespace CodeChat.Controllers
             crypt.Dispose();
             return Convert.ToBase64String(buf);
         }
-
-       
     }
 }

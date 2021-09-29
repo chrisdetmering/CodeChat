@@ -28,7 +28,7 @@ namespace CodeChat.Controllers
             _userService = userService;
         }
 
-        // GET: api/Messages
+
         [HttpGet]
         public async Task<ActionResult<Dictionary<Guid, MessageDTOResponse>>> GetMessages()
         {
@@ -55,7 +55,7 @@ namespace CodeChat.Controllers
                 );
         }
 
-        // GET: api/Messages/5
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Message>> GetMessage(Guid id)
         {
@@ -76,8 +76,7 @@ namespace CodeChat.Controllers
             return message;
         }
 
-        // PUT: api/Messages/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+     
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMessage(Guid id, Message message)
         {
@@ -114,8 +113,8 @@ namespace CodeChat.Controllers
             return NoContent();
         }
 
-        // POST: api/Messages
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
+
         [HttpPost]
         public async Task<ActionResult> PostMessage(MessageDTO messageDTO)
         {
@@ -152,7 +151,7 @@ namespace CodeChat.Controllers
             
         }
 
-        // DELETE: api/Messages/5
+       
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMessage(Guid id)
         {

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CodeChat.DataAccess.Data;
 using CodeChat.DataAccess.Models;
+using CodeChat.Services;
 
 namespace CodeChat.Controllers
 {
@@ -14,24 +15,36 @@ namespace CodeChat.Controllers
     public class ChannelsController : ControllerBase
     {
         private readonly ChatContext _context;
+        private readonly IUserService _userService;
 
-        public ChannelsController(ChatContext context)
+        public ChannelsController(ChatContext context, IUserService userService)
         {
             _context = context;
+            _userService = userService;
         }
 
-        // GET: api/Channels
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Channel>>> GetChannels()
         {
+            var sessionToken = HttpContext.Request.Cookies["sessionToken"];
+            if (!_userService.IsAuthorized(sessionToken))
+            {
+                return Unauthorized(new { message = "You are unauthorized" });
+            }
+
             return await _context.Channels.ToListAsync();
         }
 
-        // POST: api/Channels
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        
         [HttpPost]
         public async Task<ActionResult<Channel>> PostChannel(Channel channel)
         {
+            var sessionToken = HttpContext.Request.Cookies["sessionToken"];
+            if (!_userService.IsAuthorized(sessionToken))
+            {
+                return Unauthorized(new { message = "You are unauthorized" });
+            }
+
             _context.Channels.Add(channel);
             await _context.SaveChangesAsync();
 

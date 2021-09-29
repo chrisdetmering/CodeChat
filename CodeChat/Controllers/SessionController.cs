@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using System.Threading.Tasks;
 using CodeChat.DataAccess.Data;
 using CodeChat.DTOs;
@@ -23,7 +24,6 @@ namespace CodeChat.Controllers
         }
     
 
-        // Post: api/session
         [HttpPost]
         public async Task<ActionResult<UserLoggedInDTO>> PostSession(UserCredentialsDTO userCredentials)
         {
@@ -49,7 +49,6 @@ namespace CodeChat.Controllers
           
         }
 
-        ////Delete: api/session
         public async Task<IActionResult> DeleteSession()
         {
             var sessionToken = HttpContext.Request.Cookies["sessionToken"];
@@ -67,18 +66,14 @@ namespace CodeChat.Controllers
 
                 await _context.SaveChangesAsync();
 
-                return Ok(new { message = "User logged out" });
+                HttpContext.Response.Cookies.Delete("sessionToken");
+
+                return Ok(new { isLoggedOut = true, id = user.Id });
             }
             catch (Exception ex)
             {
                 return BadRequest(new { message = $"There was the following error {ex} " });
             }
- 
-            
         }
-
-
-
-
     }
 }
