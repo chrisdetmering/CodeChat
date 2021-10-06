@@ -3,6 +3,8 @@ import * as signalR from '@microsoft/signalr';
 import { ChannelProps } from "./ChannelsContainer";
 import { Link } from 'react-router-dom';
 import { Message } from '../../store/Reducers/MessagesReducer';
+import { Col, Row, Nav, NavItem, TabPane, NavLink, TabContent, Card, CardTitle, CardText, Button } from 'reactstrap';
+
 
 
 
@@ -10,7 +12,8 @@ class Channels extends React.PureComponent<ChannelProps>{
 
     state = {
         hubConnection: null,
-        messageText: ''
+        messageText: '',
+        activeTab: 0
     }
 
     public async componentDidMount() {
@@ -30,17 +33,18 @@ class Channels extends React.PureComponent<ChannelProps>{
         return (
             <React.Fragment>
                 <h1>ChatRoom</h1>
+                {/* Render channels */}
                 {this.renderMessages()}
                 {this.renderMessageInput()}
             </React.Fragment>
         );
     }
 
+    //Need to pass in the channelId 
     private handleSendMessage = async (): Promise<void> => {
         this.props.postMessage({
-            id: 14,
-            username: 'Chris',
-            text: this.state.messageText
+            text: this.state.messageText,
+            channelId: "1410da4f-0d9a-42f7-b05d-194791149eba"
         });
         this.setState({ messageText: "" })
     }
@@ -50,20 +54,78 @@ class Channels extends React.PureComponent<ChannelProps>{
         this.setState({ messageText });
     }
 
+
+    private toggleTabs = (activeTab: number) => {
+        console.log(activeTab)
+        this.setState({ activeTab });
+    }
+
+    //renderChannels
     private renderMessages() {
 
         return (
-            <ul>
+            <div>
+                <Nav tabs>
+                    <NavItem>
+                        <NavLink
+                            className={`${this.state.activeTab === 0 ? 'active' : ''}`}
+                            onClick={() => { this.toggleTabs(0); }}
+                        >
+                            Tab1
+                        </NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink
+                            className={`${this.state.activeTab === 1 ? 'active' : ''}`}
+                            onClick={() => { this.toggleTabs(1); }}
+                        >
+                            More Tabs
+                        </NavLink>
+                    </NavItem>
+                </Nav>
 
-                {this.props.messages.map((message: Message) => {
-                    return (
-                        <li key={message.id}>
-                            <h5>{message.username}</h5>
-                            <p>{message.text}</p>
-                        </li>
-                    );
-                })}
-            </ul>
+                <TabContent activeTab={`${this.state.activeTab}`}>
+                    <TabPane tabId="0">
+                        <Row>
+                            <Col sm="12">
+                                <h4>Tab 1 Contents</h4>
+                            </Col>
+                        </Row>
+                    </TabPane>
+                    <TabPane tabId="1">
+                        <Row>
+                            <Col sm="6">
+                                <Card body>
+                                    <CardTitle>Special Title Treatment</CardTitle>
+                                    <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
+                                    <Button>Go somewhere</Button>
+                                </Card>
+                            </Col>
+                            <Col sm="6">
+                                <Card body>
+                                    <CardTitle>Special Title Treatment</CardTitle>
+                                    <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
+                                    <Button>Go somewhere</Button>
+                                </Card>
+                            </Col>
+                        </Row>
+                    </TabPane>
+                </TabContent>
+            </div>
+
+
+
+            // <ul>
+
+            //     {this.props.messages.map((message: Message) => {
+            //         return (
+            //             <li key={message.id}>
+            //                 <h5>{message.username}</h5>
+            //                 <p>{message.text}</p>
+            //             </li>
+            //         );
+            //     })}
+            // </ul>
         );
     }
 

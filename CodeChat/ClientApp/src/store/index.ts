@@ -4,7 +4,7 @@ import * as Session from "../store/Reducers/SessionsReducer";
 
 // The top-level state object
 export interface ApplicationState {
-    messages: Messages.Message[] | undefined;
+    messages: Messages.MessagesState | undefined;
     users: undefined;
     session: Session.SessionState
 }

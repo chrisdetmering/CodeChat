@@ -41,6 +41,7 @@ namespace CodeChat.Controllers
                 return Unauthorized(new { message = "You are unauthorized" });
             }
 
+
             return await _context.Messages.ToDictionaryAsync(
                     m => m.Id,
                     m =>
@@ -130,19 +131,29 @@ namespace CodeChat.Controllers
                 
                 var user = _userService.FindUserBySessionToken(sessionToken);
 
-                var message = new Message
+                var msg = new Message
                 {
                     Text = messageDTO.Text,
                     ChannelId = Guid.Parse(messageDTO.ChannelId),
                     UserId = user.Id
                 };
 
+               
             
-                _context.Messages.Add(message);
+                _context.Messages.Add(msg);
                 await _context.SaveChangesAsync();
-                await _hubContext.Clients.All.SendAsync("broadcastMessage", message);
 
-                return CreatedAtAction("GetMessage", new { id = message.Id });
+
+                var msgResponse = new MessageDTOResponse
+                {
+                    Id = msg.Id,
+                    Text = msg.Text,
+                    ChannelId = msg.ChannelId
+                };
+
+                await _hubContext.Clients.All.SendAsync("broadcastMessage", msgResponse);
+
+                return CreatedAtAction("GetMessage", new { id = msgResponse.Id });
             }
             catch (Exception ex)
             {

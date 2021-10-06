@@ -7,9 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using CodeChat.DataAccess.Data;
 using CodeChat.DataAccess.Models;
 using CodeChat.Services;
+using CodeChat.DTOs;
 
 namespace CodeChat.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class ChannelsController : ControllerBase
@@ -24,15 +26,25 @@ namespace CodeChat.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Channel>>> GetChannels()
+        public async Task<ActionResult<Dictionary<Guid, ChannelDTO>>> GetChannels()
         {
             var sessionToken = HttpContext.Request.Cookies["sessionToken"];
             if (!_userService.IsAuthorized(sessionToken))
             {
                 return Unauthorized(new { message = "You are unauthorized" });
             }
+            var channels = _context.Channels.Include(c => c.Messages);
+           
 
-            return await _context.Channels.ToListAsync();
+            return await channels.ToDictionaryAsync(
+                    c => c.Id,
+                    c => new ChannelDTO
+                    {
+                        Id = c.Id,
+                        Name = c.Name,
+                        Messages = c.Messages.Select(m => m.Id)
+                    }
+              );
         }
 
         

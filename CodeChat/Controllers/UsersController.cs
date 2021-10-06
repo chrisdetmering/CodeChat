@@ -35,18 +35,40 @@ namespace CodeChat.Controllers
         //}
 
         // GET: api/Users/5
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<User>> GetUser(Guid id)
-        //{
-        //    var user = await _context.Users.FindAsync(id);
+        [Route("current")]
+        [HttpGet("{id}")]
+        public ActionResult<UserLoggedInDTO> GetCurrentUser()
+        {
+            var sessionToken = HttpContext.Request.Cookies["sessionToken"];
 
-        //    if (user == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (!_userService.IsAuthorized(sessionToken))
+            {
+                return Unauthorized(new { message = "You are unauthorized" });
+            }
 
-        //    return user;
-        //}
+            try
+            {
+
+                var user = _userService.FindUserBySessionToken(sessionToken);
+
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                var userLoggedInDTO = new UserLoggedInDTO
+                {
+                    Id = user.Id.ToString(),
+                    Username = user.Username
+                };
+                return userLoggedInDTO;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = $"{ex.Message}" });
+            }
+
+
+        }
 
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -98,7 +120,6 @@ namespace CodeChat.Controllers
             AddSessionTokenToCookies(user.SessionToken, HttpContext);
 
             var userDTO = _userService.ToDTO(user);
-            Console.WriteLine(userDTO);
             return CreatedAtAction("GetUser", new { id = user.Id }, userDTO);
         }
 
