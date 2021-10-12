@@ -1,11 +1,8 @@
 import * as React from 'react';
 import * as signalR from '@microsoft/signalr';
 import { ChannelProps } from "./ChannelsContainer";
-import { Link } from 'react-router-dom';
-import { Message } from '../../store/Reducers/MessagesReducer';
-import { Col, Row, Nav, NavItem, TabPane, NavLink, TabContent, Card, CardTitle, CardText, Button } from 'reactstrap';
-
-
+import { Col, Row, Nav, NavItem, TabPane, NavLink, TabContent, Card, CardTitle, CardText, Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { Channel } from '../../store/Reducers/ChannelsReducer';
 
 
 class Channels extends React.PureComponent<ChannelProps>{
@@ -13,7 +10,7 @@ class Channels extends React.PureComponent<ChannelProps>{
     state = {
         hubConnection: null,
         messageText: '',
-        activeTab: 0
+        activeChannelId: '',
     }
 
     public async componentDidMount() {
@@ -25,26 +22,28 @@ class Channels extends React.PureComponent<ChannelProps>{
             this.props.receiveMessage(message)
         })
         this.setState({ hubConnection });
-        this.props.requestMessages()
+        this.getChannels();
+        this.props.requestMessages();
     }
-
 
     public render() {
+        if (this.props.isLoading) {
+            return <div>Loading...</div>
+        }
         return (
-            <React.Fragment>
-                <h1>ChatRoom</h1>
-                {/* Render channels */}
-                {this.renderMessages()}
-                {this.renderMessageInput()}
-            </React.Fragment>
+            <>
+                <h1>Code Chat Rooms</h1>
+                {this.renderChannels()}
+            </>
         );
     }
-
-    //Need to pass in the channelId 
+    private getChannels() {
+        this.props.requestChannels();
+    }
     private handleSendMessage = async (): Promise<void> => {
         this.props.postMessage({
             text: this.state.messageText,
-            channelId: "1410da4f-0d9a-42f7-b05d-194791149eba"
+            channelId: this.state.activeChannelId
         });
         this.setState({ messageText: "" })
     }
@@ -54,79 +53,62 @@ class Channels extends React.PureComponent<ChannelProps>{
         this.setState({ messageText });
     }
 
-
-    private toggleTabs = (activeTab: number) => {
-        console.log(activeTab)
-        this.setState({ activeTab });
+    private toggleChannel = (activeChannelId: string) => {
+        this.setState({ activeChannelId });
     }
 
-    //renderChannels
-    private renderMessages() {
-
+    private renderChannels() {
         return (
             <div>
                 <Nav tabs>
-                    <NavItem>
-                        <NavLink
-                            className={`${this.state.activeTab === 0 ? 'active' : ''}`}
-                            onClick={() => { this.toggleTabs(0); }}
-                        >
-                            Tab1
-                        </NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink
-                            className={`${this.state.activeTab === 1 ? 'active' : ''}`}
-                            onClick={() => { this.toggleTabs(1); }}
-                        >
-                            More Tabs
-                        </NavLink>
-                    </NavItem>
+                    {this.props.channels.map((channel) => {
+                        return (
+                            <NavItem key={channel.id}>
+                                <NavLink
+                                    className={`${this.state.activeChannelId === channel.id ? 'active' : ''}`}
+                                    onClick={() => { this.toggleChannel(channel.id); }}
+                                >
+                                    {channel.name}
+                                </NavLink>
+                            </NavItem>
+                        )
+
+                    })}
                 </Nav>
 
-                <TabContent activeTab={`${this.state.activeTab}`}>
-                    <TabPane tabId="0">
-                        <Row>
-                            <Col sm="12">
-                                <h4>Tab 1 Contents</h4>
-                            </Col>
-                        </Row>
-                    </TabPane>
-                    <TabPane tabId="1">
-                        <Row>
-                            <Col sm="6">
-                                <Card body>
-                                    <CardTitle>Special Title Treatment</CardTitle>
-                                    <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
-                                    <Button>Go somewhere</Button>
-                                </Card>
-                            </Col>
-                            <Col sm="6">
-                                <Card body>
-                                    <CardTitle>Special Title Treatment</CardTitle>
-                                    <CardText>With supporting text below as a natural lead-in to additional content.</CardText>
-                                    <Button>Go somewhere</Button>
-                                </Card>
-                            </Col>
-                        </Row>
-                    </TabPane>
+                <TabContent activeTab={`${this.state.activeChannelId}`}>
+                    {this.props.channels.map((channel) => {
+                        return this.renderChannelMessages(channel);
+                    })}
                 </TabContent>
             </div>
-
-
-
-            // <ul>
-
-            //     {this.props.messages.map((message: Message) => {
-            //         return (
-            //             <li key={message.id}>
-            //                 <h5>{message.username}</h5>
-            //                 <p>{message.text}</p>
-            //             </li>
-            //         );
-            //     })}
-            // </ul>
         );
+    }
+
+    private renderChannelMessages(channel: Channel) {
+        return (<>
+            <TabPane key={channel.id} tabId={`${channel.id}`}>
+                <Row>
+                    <Col sm="12">
+                        {
+                            this.props.selectMessageByIds(channel.messagesIds).map(
+                                message => {
+                                    return (
+                                        <div key={message.id}>
+                                            <div>{message.username}</div>
+                                            <p>{message.text}</p>
+                                        </div>
+                                    )
+                                }
+                            )
+                        }
+
+                    </Col>
+                </Row>
+                {this.renderMessageInput()}
+            </TabPane>
+
+        </>);
     }
 
     private renderMessageInput() {

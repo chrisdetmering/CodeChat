@@ -8,6 +8,8 @@ using CodeChat.DataAccess.Data;
 using CodeChat.DataAccess.Models;
 using CodeChat.Services;
 using CodeChat.DTOs;
+using Microsoft.AspNetCore.SignalR;
+using CodeChat.Hubs;
 
 namespace CodeChat.Controllers
 {
@@ -18,15 +20,18 @@ namespace CodeChat.Controllers
     {
         private readonly ChatContext _context;
         private readonly IUserService _userService;
+        private readonly IHubContext<ChatHub> _hubContext;
 
-        public ChannelsController(ChatContext context, IUserService userService)
+
+        public ChannelsController(ChatContext context, IUserService userService, IHubContext<ChatHub> hubContext)
         {
             _context = context;
             _userService = userService;
+            _hubContext = hubContext;
         }
 
         [HttpGet]
-        public async Task<ActionResult<Dictionary<Guid, ChannelDTO>>> GetChannels()
+        public async Task<ActionResult<Dictionary<Guid, ChannelResponseDTO>>> GetChannels()
         {
             var sessionToken = HttpContext.Request.Cookies["sessionToken"];
             if (!_userService.IsAuthorized(sessionToken))
@@ -38,31 +43,13 @@ namespace CodeChat.Controllers
 
             return await channels.ToDictionaryAsync(
                     c => c.Id,
-                    c => new ChannelDTO
+                    c => new ChannelResponseDTO
                     {
                         Id = c.Id,
                         Name = c.Name,
-                        Messages = c.Messages.Select(m => m.Id)
+                        MessagesIds = c.Messages.OrderBy(m => m.CreatedAt).Select(m => m.Id)
                     }
               );
         }
-
-        
-        [HttpPost]
-        public async Task<ActionResult<Channel>> PostChannel(Channel channel)
-        {
-            var sessionToken = HttpContext.Request.Cookies["sessionToken"];
-            if (!_userService.IsAuthorized(sessionToken))
-            {
-                return Unauthorized(new { message = "You are unauthorized" });
-            }
-
-            _context.Channels.Add(channel);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetChannel", new { id = channel.Id }, channel);
-        }
-
-        
     }
 }

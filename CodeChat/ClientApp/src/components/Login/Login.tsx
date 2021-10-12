@@ -15,7 +15,7 @@ class Login extends React.PureComponent<LoginProps> {
 
     public componentDidUpdate() {
         if (this.props.errors !== undefined) {
-            console.log(this.props.errors);
+            //TODO:
         }
     }
 

@@ -3,19 +3,26 @@ import { AppThunkAction } from '../';
 
 
 export interface MessagesState {
-    [key: string]: Message | null
+    [key: string]: Message
 }
 
 export interface NewMessage {
-    text: string; 
-    channelId: string; 
+    text: string;
+    channelId: string;
 }
 
 export interface Message {
-    id: number;
+    id: string;
     username: string;
+    channelId: string;
     text: string;
 }
+
+export interface ReceiveMessageAction {
+    type: 'RECEIVE_MESSAGE';
+    message: Message;
+}
+
 
 //ACTION TYPES
 interface RequestMessagesAction {
@@ -27,17 +34,9 @@ interface ReceiveMessagesAction {
     messages: MessagesState;
 }
 
-interface PostMessageAction {
-    type: 'POST_MESSAGE';
-}
-
-interface ReceiveMessageAction {
-    type: 'RECEIVE_MESSAGE';
-    message: Message;
-}
 
 //ACTION UNION
-type KnownAction = RequestMessagesAction | ReceiveMessagesAction | PostMessageAction | ReceiveMessageAction;
+type KnownAction = RequestMessagesAction | ReceiveMessagesAction | ReceiveMessageAction;
 
 
 //ACTION CREATORS 
@@ -46,22 +45,19 @@ export const receiveMessage = (message: Message) => ({ type: 'RECEIVE_MESSAGE', 
 
 //THUNKS
 export const requestMessages = (): AppThunkAction<KnownAction> => async (dispatch) => {
-    // Only load data if it's something we don't already have (and are not already loading)
-    //TODO: dispatch loading
     dispatch({ type: 'REQUEST_MESSAGES' })
     try {
         const response = await fetch(`/api/messages`)
+
         const messages = await response.json()
-        console.log(messages)
+
         dispatch({ type: 'RECEIVE_MESSAGES', messages })
     } catch (error) {
-        //TODO: dispatch error
+        console.log(error)
     }
 }
 
 export const postMessage = (newMessage: NewMessage): AppThunkAction<KnownAction> => async () => {
-    //TODO: dispatch loading
-    // dispatch({ type: 'POST_MESSAGE' })
     try {
         const body = JSON.stringify(newMessage)
         const config = {
@@ -89,5 +85,5 @@ export const reducer: Reducer<MessagesState> = (state = initialState, incomingAc
             }
     }
 
-    return initialState;
+    return state;
 };

@@ -41,8 +41,9 @@ namespace CodeChat.Controllers
                 return Unauthorized(new { message = "You are unauthorized" });
             }
 
-
-            return await _context.Messages.ToDictionaryAsync(
+            var messages = await _context.Messages
+                .Include(m => m.User)
+                .ToDictionaryAsync(
                     m => m.Id,
                     m =>
                     {
@@ -50,10 +51,13 @@ namespace CodeChat.Controllers
                         {
                             Id = m.Id,
                             ChannelId = m.ChannelId,
+                            Username = m.User.Username,
                             Text = m.Text
                         };
                     }
                 );
+
+            return messages;
         }
 
 
@@ -148,6 +152,7 @@ namespace CodeChat.Controllers
                 {
                     Id = msg.Id,
                     Text = msg.Text,
+                    Username = msg.User.Username,
                     ChannelId = msg.ChannelId
                 };
 

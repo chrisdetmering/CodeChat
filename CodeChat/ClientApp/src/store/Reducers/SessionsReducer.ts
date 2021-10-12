@@ -42,7 +42,6 @@ export const deleteSession = (): AppThunkAction<KnownAction> => async (dispatch)
 
         if (response.ok) {
             const currentUser = await response.json();
-            console.log(currentUser)
             if (currentUser.isLoggedOut) {
                 dispatch(logoutCurrentUser(currentUser.id));
                 dispatch(push('/'));
