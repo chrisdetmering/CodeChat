@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink, Button } from 'reactstrap';
+import * as React from 'react'
+import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink, Button } from 'reactstrap'
 
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
@@ -58,7 +58,7 @@ export default class NavMenu extends React.PureComponent<NavProps> {
     }
 
     private logout = () => {
-        this.props.logout();
+        this.props.logout()
     }
 
 

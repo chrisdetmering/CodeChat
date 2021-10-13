@@ -1,10 +1,10 @@
-import { connect, ConnectedProps } from "react-redux";
-import { RouteComponentProps } from "react-router";
-import { ApplicationState } from "../../store";
-import { selectErrors } from "../../store/RawStateSelectors/SessionSelectors";
-import * as SessionStore from "../../store/Reducers/SessionsReducer";
-import { NewUser } from "../../store/Reducers/UsersReducer";
-import Login from "./Login";
+import { connect, ConnectedProps } from 'react-redux'
+import { RouteComponentProps } from 'react-router'
+import { ApplicationState } from '../../store'
+import { selectErrors } from '../../store/RawStateSelectors/SessionSelectors'
+import * as SessionStore from '../../store/Reducers/SessionsReducer'
+import { NewUser } from '../../store/Reducers/UsersReducer'
+import Login from './Login'
 
 
 //CHANNEL PROP TYPES

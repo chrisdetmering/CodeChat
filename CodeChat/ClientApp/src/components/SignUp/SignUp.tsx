@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { Col, Row, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
-import { SignUpProps } from './SignUpContainer';
+import * as React from 'react'
+import { Col, Row, Button, Form, FormGroup, Label, Input } from 'reactstrap'
+import { SignUpProps } from './SignUpContainer'
 
 interface SignUpState {
-    [key: string]: string;
+    [key: string]: string
 }
 
 class SignUp extends React.PureComponent<SignUpProps> {
@@ -45,18 +45,20 @@ class SignUp extends React.PureComponent<SignUpProps> {
                     </Col>
                 </Row>
                 <Button color="info">Sign Up!</Button>
+                <br />
+                {this.props.errors && this.props.errors}
             </Form>
 
         );
     }
 
     private handleChange = (e: any): void => {
-        const { name, value } = e.target;
-        this.setState({ [name]: value });
+        const { name, value } = e.target
+        this.setState({ [name]: value })
     }
 
     private handleSubmit = (e: any) => {
-        e.preventDefault();
+        e.preventDefault()
         this.props.postUser({
             username: this.state.username,
             password: this.state.password
@@ -65,4 +67,4 @@ class SignUp extends React.PureComponent<SignUpProps> {
 }
 
 
-export default SignUp;
+export default SignUp

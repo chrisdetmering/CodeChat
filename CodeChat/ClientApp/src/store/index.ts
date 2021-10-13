@@ -5,14 +5,14 @@ import * as Entities from '../store/Reducers/EntitiesReducer'
 import * as Session from '../store/Reducers/SessionsReducer'
 // The top-level state object
 export interface ApplicationState {
-    entities: EntitiesState
-    session: Session.SessionState
+    entities: EntitiesState;
+    session: Session.SessionState;
 }
 
 interface EntitiesState {
-    users: Users.UsersState | undefined;
-    messages: Messages.MessagesState
-    channels: Channels.ChannelsState
+    users: Users.UsersState;
+    messages: Messages.MessagesState;
+    channels: Channels.ChannelsState;
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using

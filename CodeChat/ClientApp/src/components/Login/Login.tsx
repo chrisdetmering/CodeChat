@@ -1,9 +1,9 @@
-import * as React from 'react';
-import { Col, Row, Button, Form, FormGroup, Label, Input } from 'reactstrap';
-import { LoginProps } from './LoginContainer';
+import * as React from 'react'
+import { Col, Row, Button, Form, FormGroup, Label, Input } from 'reactstrap'
+import { LoginProps } from './LoginContainer'
 
 interface LoginState {
-    [key: string]: string;
+    [key: string]: string
 }
 
 class Login extends React.PureComponent<LoginProps> {
@@ -13,13 +13,8 @@ class Login extends React.PureComponent<LoginProps> {
         password: ''
     }
 
-    public componentDidUpdate() {
-        if (this.props.errors !== undefined) {
-            //TODO:
-        }
-    }
-
     public render() {
+
         return (
             <Form onSubmit={this.handleSubmit}>
                 <Row form>
@@ -51,18 +46,20 @@ class Login extends React.PureComponent<LoginProps> {
                     </Col>
                 </Row>
                 <Button color="info">Login!</Button>
+                <br />
+                {this.props.errors && this.props.errors}
             </Form>
 
         );
     }
 
     private handleChange = (e: any): void => {
-        const { name, value } = e.target;
-        this.setState({ [name]: value });
+        const { name, value } = e.target
+        this.setState({ [name]: value })
     }
 
     private handleSubmit = (e: any) => {
-        e.preventDefault();
+        e.preventDefault()
         this.props.postSession({
             username: this.state.username,
             password: this.state.password
@@ -76,4 +73,4 @@ class Login extends React.PureComponent<LoginProps> {
 
 
 
-export default Login;
+export default Login

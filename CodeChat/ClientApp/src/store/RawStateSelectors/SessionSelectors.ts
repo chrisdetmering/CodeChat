@@ -1,4 +1,4 @@
-import { ApplicationState } from "../index";
+import { ApplicationState } from '../index'
 
 export const selectCurrentUserId = (state: ApplicationState): string | null => {
     return state.session.currentUserId

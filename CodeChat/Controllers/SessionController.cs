@@ -27,11 +27,7 @@ namespace CodeChat.Controllers
         [HttpPost]
         public async Task<ActionResult<UserLoggedInDTO>> PostSession(UserCredentialsDTO userCredentials)
         {
-            var sessionToken = HttpContext.Request.Cookies["sessionToken"];
-            if (sessionToken != null) {
-
-                return BadRequest(new { message = "User already logged in" });
-            }
+           
           
             try
             {

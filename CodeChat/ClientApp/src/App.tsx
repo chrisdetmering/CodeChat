@@ -1,16 +1,16 @@
-import * as React from 'react';
-import { Redirect, Route } from 'react-router';
-import Layout from './components/Layout';
-import ChannelsContainer from './components/Channels/ChannelsContainer';
-import SignUpContainer from "./components/SignUp/SignUpContainer";
+import * as React from 'react'
+import { Redirect, Route } from 'react-router'
+import Layout from './components/Layout'
+import ChannelsContainer from './components/Channels/ChannelsContainer'
+import SignUpContainer from './components/SignUp/SignUpContainer'
 import './custom.css'
-import LoginContainer from './components/Login/LoginContainer';
-import { connect, ConnectedProps } from 'react-redux';
-import { selectUserByCurrentUserId } from './store/SharedDerivedStateSelectors/selectCurrentUser';
+import LoginContainer from './components/Login/LoginContainer'
+import { connect, ConnectedProps } from 'react-redux'
+import { selectUserByCurrentUserId } from './store/SharedDerivedStateSelectors/selectCurrentUser'
 import { ApplicationState } from './store';
-import * as UsersStore from './store/Reducers/UsersReducer';
-import { push } from 'connected-react-router';
-import { Spinner } from 'reactstrap';
+import * as UsersStore from './store/Reducers/UsersReducer'
+import { push } from 'connected-react-router'
+import { Spinner } from 'reactstrap'
 
 interface AppState {
     isLoading: boolean
@@ -24,7 +24,7 @@ class App extends React.PureComponent<AppProps> {
     }
 
     public componentDidMount() {
-        this.getCurrentUser();
+        this.getCurrentUser()
     }
 
     public render() {
@@ -51,17 +51,17 @@ class App extends React.PureComponent<AppProps> {
     }
 
     private getCurrentUser = async () => {
-        this.setState({ isLoading: true });
+        this.setState({ isLoading: true })
         const response = await fetch('api/users/current')
 
         if (response.ok) {
-            this.setState({ isLoading: false });
-            const user = await response.json();
-            this.props.receiveUser(user);
-            this.props.push('/channels');
+            this.setState({ isLoading: false })
+            const user = await response.json()
+            this.props.receiveUser(user)
+            this.props.push('/channels')
         } else {
-            this.setState({ isLoading: false });
-            this.props.push('/signup');
+            this.setState({ isLoading: false })
+            this.props.push('/signup')
         }
     }
 

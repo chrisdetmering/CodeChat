@@ -1,78 +1,85 @@
-import { Action, Reducer } from 'redux';
-import { AppThunkAction } from '../';
-import { ReceiveMessageAction } from "./MessagesReducer";
+import { Action, Reducer } from 'redux'
+import { AppThunkAction } from '../'
+import { ReceiveMessageAction } from './MessagesReducer'
 
 
 export interface ChannelsState {
     channels: Channels
-    isLoading: boolean;
+    isLoading: boolean
+    error: string | null
 }
 
 interface Channels {
-    [key: string]: Channel;
+    [key: string]: Channel
 }
 
 export interface NewChannel {
-    name: string;
+    name: string
 }
 
 export interface Channel {
-    id: string;
-    name: string;
-    messagesIds: string[];
+    id: string
+    name: string
+    messagesIds: string[]
 }
 
 //ACTION TYPES
 interface RequestChannelsAction {
-    type: 'REQUEST_CHANNELS';
+    type: 'REQUEST_CHANNELS'
 }
 
 interface ReceiveChannelsAction {
-    type: 'RECEIVE_CHANNELS';
-    channels: Channels;
+    type: 'RECEIVE_CHANNELS'
+    channels: Channels
 }
 
 interface ReceiveChannelAction {
-    type: 'RECEIVE_CHANNEL';
-    channel: Channel;
+    type: 'RECEIVE_CHANNEL'
+    channel: Channel
 }
 
-interface IsLoading {
-    type: 'IS_LOADING';
+interface GetChannelsErrorAction {
+    type: 'GET_CHANNELS_ERROR'
+    message: string
+}
+
+interface IsChannelsLoadingAction {
+    type: 'IS_CHANNELS_LOADING'
     isLoading: boolean
 }
 
 
 //ACTION UNION
-type KnownAction = RequestChannelsAction | ReceiveChannelsAction | ReceiveMessageAction | ReceiveChannelAction | IsLoading;
+type KnownAction = RequestChannelsAction | ReceiveChannelsAction | ReceiveMessageAction | ReceiveChannelAction | IsChannelsLoadingAction | GetChannelsErrorAction
 
 //ACTION CREATORS 
-export const receiveChannels = (channels: Channels) => ({ type: 'RECEIVE_CHANNELS', channels: channels })
-export const receiveChannel = (channel: Channel) => ({ type: 'RECEIVE_CHANNEL', channel: channel })
-
-
+export const receiveChannels = (channels: Channels): ReceiveChannelsAction => ({ type: 'RECEIVE_CHANNELS', channels: channels })
+const isChannelsLoading = (isLoading: boolean): IsChannelsLoadingAction => ({ type: 'IS_CHANNELS_LOADING', isLoading: isLoading })
+const getChannelsError = (message: string): GetChannelsErrorAction => ({ type: 'GET_CHANNELS_ERROR', message: message })
 //THUNKS
-export const requestChannels = (): AppThunkAction<KnownAction> => async (dispatch) => {
+export const getChannels = (): AppThunkAction<KnownAction> => async (dispatch) => {
 
-    dispatch({ type: 'IS_LOADING', isLoading: true });
-    dispatch({ type: 'REQUEST_CHANNELS' })
+    dispatch(isChannelsLoading(true))
     try {
         const response = await fetch(`/api/channels`)
         const channels = await response.json()
-        dispatch({ type: 'RECEIVE_CHANNELS', channels })
-    } catch (error) {
+        dispatch(receiveChannels(channels))
 
+    } catch (error) {
+        dispatch(getChannelsError('There was a problem with getting the channels :)'))
+        console.error(error)
     }
-    dispatch({ type: 'IS_LOADING', isLoading: false });
+    dispatch(isChannelsLoading(false))
 }
 
 const initialState: ChannelsState = {
     channels: {},
     isLoading: false,
+    error: null
 };
 
 export const reducer: Reducer<ChannelsState> = (state = initialState, incomingAction: Action): ChannelsState => {
-    const action = incomingAction as KnownAction;
+    const action = incomingAction as KnownAction
     switch (action.type) {
         case 'RECEIVE_CHANNELS':
             return {
@@ -80,20 +87,25 @@ export const reducer: Reducer<ChannelsState> = (state = initialState, incomingAc
                 channels: action.channels
             }
         case 'RECEIVE_MESSAGE':
-            const channel = Object.assign({}, state.channels[action.message.channelId]);
-            channel.messagesIds = [...channel.messagesIds, action.message.id];
-            const channels = Object.assign({}, state.channels);
-            channels[channel.id] = channel;
+            const channel = Object.assign({}, state.channels[action.message.channelId])
+            channel.messagesIds = [...channel.messagesIds, action.message.id]
+            const channels = Object.assign({}, state.channels)
+            channels[channel.id] = channel
             return {
                 ...state,
                 channels
             }
-        case 'IS_LOADING':
+        case 'IS_CHANNELS_LOADING':
             return {
                 ...state,
                 isLoading: !state.isLoading
             }
+        case 'GET_CHANNELS_ERROR':
+            return {
+                ...state,
+                error: action.message
+            }
     }
 
-    return state;
+    return state
 };

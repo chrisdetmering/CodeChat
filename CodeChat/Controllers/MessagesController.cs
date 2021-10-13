@@ -97,6 +97,8 @@ namespace CodeChat.Controllers
                 return BadRequest();
             }
 
+            var user = _userService.FindUserBySessionToken(sessionToken);
+            message.UserId = user.Id;
             _context.Entry(message).State = EntityState.Modified;
 
             try
@@ -115,7 +117,15 @@ namespace CodeChat.Controllers
                 }
             }
 
-            return NoContent();
+
+            var messageDTOResponse = new MessageDTOResponse
+            {
+                Id = message.Id,
+                ChannelId = message.ChannelId,
+                Username = message.User.Username,
+                Text = message.Text
+            };
+            return Ok(messageDTOResponse);
         }
 
 
@@ -189,7 +199,7 @@ namespace CodeChat.Controllers
             _context.Messages.Remove(message);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(id);
         }
 
         private bool MessageExists(Guid id)

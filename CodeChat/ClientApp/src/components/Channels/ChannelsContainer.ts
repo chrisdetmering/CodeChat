@@ -1,10 +1,11 @@
 import { connect, ConnectedProps } from 'react-redux'
 import { RouteComponentProps } from 'react-router'
 import { ApplicationState } from '../../store'
-import { selectChannels, selectIsChannelsLoading, selectMessageByIds } from "../../store/RawStateSelectors/EntitiesSelectors";
+import { selectChannels, selectChannelsError, selectIsChannelsLoading, selectMessageByIds, selectMessagesErrors } from '../../store/RawStateSelectors/EntitiesSelectors'
 import * as MessagesStore from '../../store/Reducers/MessagesReducer'
 import * as ChannelsStore from '../../store/Reducers/ChannelsReducer'
-import Channels from "./Channels";
+import Channels from './Channels'
+import { selectUserByCurrentUserId } from '../../store/SharedDerivedStateSelectors/selectCurrentUser'
 
 
 //CHANNEL PROP TYPES
@@ -12,14 +13,20 @@ const mapState = (state: ApplicationState) => (
     {
         channels: selectChannels(state),
         selectMessageByIds: (ids: string[]) => selectMessageByIds(state, ids),
-        isLoading: selectIsChannelsLoading(state)
+        isLoading: selectIsChannelsLoading(state),
+        currentUser: selectUserByCurrentUserId(state),
+        error: selectChannelsError(state),
+        errorMessages: selectMessagesErrors(state)
     }
 )
 const mapDispatch = {
-    requestChannels: ChannelsStore.requestChannels,
+    getChannels: ChannelsStore.getChannels,
     requestMessages: MessagesStore.requestMessages,
     postMessage: (message: MessagesStore.NewMessage) => MessagesStore.postMessage(message),
     receiveMessage: (message: MessagesStore.Message) => MessagesStore.receiveMessage(message),
+    deleteMessage: (message: MessagesStore.Message) => MessagesStore.deleteMessage(message),
+    editMessage: MessagesStore.editMessage,
+    clearMessageErrors: MessagesStore.clearMessagesError
 }
 
 const connector = connect(mapState, mapDispatch)
