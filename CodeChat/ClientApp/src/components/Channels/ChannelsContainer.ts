@@ -25,7 +25,7 @@ const mapDispatch = {
     postMessage: (message: MessagesStore.NewMessage) => MessagesStore.postMessage(message),
     receiveMessage: (message: MessagesStore.Message) => MessagesStore.receiveMessage(message),
     deleteMessage: (message: MessagesStore.Message) => MessagesStore.deleteMessage(message),
-    editMessage: MessagesStore.editMessage,
+    editMessage: (message: MessagesStore.Message, onSuccess: () => void) => MessagesStore.editMessage(message, onSuccess),
     clearMessageErrors: MessagesStore.clearMessagesError
 }
 

@@ -104,14 +104,18 @@ class Channels extends React.PureComponent<ChannelProps>{
         })
     }
 
+    private onEditSuccess = () => {
+        this.setState({
+            editMessage: { id: '', text: '', username: '', channelId: '' }
+        })
+    }
+
     private editMessage = () => {
         const msg = this.state.editMessage
-        console.log(msg)
-        this.props.editMessage(msg)
+        this.props.editMessage(msg, this.onEditSuccess)
     }
 
     private renderChannels() {
-        console.log(this.props.error)
         if (this.props.error !== null) {
             return (<div>
                 {this.props.error}
@@ -199,7 +203,7 @@ class Channels extends React.PureComponent<ChannelProps>{
     }
 
     private isMessageDeleted = (message: Message): boolean => {
-        return message.text === 'Message was deleted';
+        return message.text === 'Message was deleted'
     }
 
     private renderMessageInput() {
