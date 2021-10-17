@@ -52,7 +52,8 @@ namespace CodeChat.Controllers
                             Id = m.Id,
                             ChannelId = m.ChannelId,
                             Username = m.User.Username,
-                            Text = m.Text
+                            Text = m.Text,
+                            
                         };
                     }
                 );
@@ -83,7 +84,7 @@ namespace CodeChat.Controllers
 
      
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMessage(Guid id, Message message)
+        public async Task<IActionResult> PutMessage(Guid id, PutMessageDTO msg)
         {
 
             var sessionToken = HttpContext.Request.Cookies["sessionToken"];
@@ -92,13 +93,14 @@ namespace CodeChat.Controllers
                 return Unauthorized(new { message = "You are unauthorized" });
             }
 
-            if (id != message.Id)
+            if (id != msg.Id)
             {
                 return BadRequest();
             }
 
-            var user = _userService.FindUserBySessionToken(sessionToken);
-            message.UserId = user.Id;
+            var message = await _context.Messages.FindAsync(id);
+            message.Text = msg.Text;
+
             _context.Entry(message).State = EntityState.Modified;
 
             try
@@ -123,7 +125,8 @@ namespace CodeChat.Controllers
                 Id = message.Id,
                 ChannelId = message.ChannelId,
                 Username = message.User.Username,
-                Text = message.Text
+                Text = message.Text,
+                CreatedAt = message.CreatedAt
             };
             return Ok(messageDTOResponse);
         }
@@ -131,7 +134,7 @@ namespace CodeChat.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> PostMessage(MessageDTO messageDTO)
+        public async Task<ActionResult> PostMessage(NewMessageDTO messageDTO)
         {
             var sessionToken = HttpContext.Request.Cookies["sessionToken"];
 
@@ -145,7 +148,7 @@ namespace CodeChat.Controllers
                 
                 var user = _userService.FindUserBySessionToken(sessionToken);
 
-                var msg = new Message
+                var message = new Message
                 {
                     Text = messageDTO.Text,
                     ChannelId = Guid.Parse(messageDTO.ChannelId),
@@ -154,16 +157,17 @@ namespace CodeChat.Controllers
 
                
             
-                _context.Messages.Add(msg);
+                _context.Messages.Add(message);
                 await _context.SaveChangesAsync();
 
 
                 var msgResponse = new MessageDTOResponse
                 {
-                    Id = msg.Id,
-                    Text = msg.Text,
-                    Username = msg.User.Username,
-                    ChannelId = msg.ChannelId
+                    Id = message.Id,
+                    Text = message.Text,
+                    Username = message.User.Username,
+                    ChannelId = message.ChannelId,
+                    CreatedAt = message.CreatedAt
                 };
 
                 await _hubContext.Clients.All.SendAsync("broadcastMessage", msgResponse);

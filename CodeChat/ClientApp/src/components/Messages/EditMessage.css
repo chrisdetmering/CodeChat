@@ -1,0 +1,159 @@
+.edit-message__div {
+    background-color: #272822;
+    font-family: ui-monospace;
+    font-size: 20px;
+    margin: 25px;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.edit-message__div:hover {
+    background-color: #222529;
+    border: 1px solid white;
+    margin-top: 24px;
+}
+
+.edit-message__span {
+    font-style: italic;
+    font-family: ui-monospace;
+    font-size: 20px;
+}
+
+.edit-message__h5 {
+    color: #A6E22E;
+    font-family: ui-monospace;
+    font-size: 20px;
+}
+
+.edit-message__button {
+    font-family: ui-monospace;
+    font-size: 20px;
+    border-color: white;
+}
+
+.edit-message__text {
+    margin: 10px;
+    padding-left: 10px;
+    background-color: #272822;
+    white-space: pre-line;
+    border-radius: 5px;
+}
+
+.edit-message__text:focus-visible {
+    outline: none;
+    box-shadow: white;
+}
+
+.edit-message__button {
+    font-family: ui-monospace;
+    font-size: 20px;
+    border-color: white;
+}
+
+/* Javascript */
+
+.edit-message__div.javascript {
+    color: #E6DB74;
+    border: 1px solid #bf3769;
+}
+
+.edit-message__div.javascript {
+    align-self: flex-end;
+}
+
+.edit-message__div.javascript:hover {
+    border: 1px solid #F92672;
+}
+
+.edit-message__span.javascript {
+    color: #66D9EF;
+}
+
+.edit-message__h5.javascript {
+    color: #A6E22E;
+}
+
+.edit-message__button.javascript {
+    color: #F92672;
+}
+
+.edit-message__button.javascript:hover {
+    color: white;
+    font-size: 18px;
+    border-color: #F92672;
+    background-color: #272822;
+}
+
+/*C# Channel Styling */
+
+.edit-message__div.c {
+    color: #e47f51;
+    border: 1px solid #d170da;
+}
+
+.edit-message__div.c {
+    align-self: flex-end;
+}
+
+.edit-message__div.c:hover {
+    border: 1px solid #803087;
+}
+
+.edit-message__span.c {
+    color: #5caae8;
+}
+
+.edit-message__h5.c {
+    color: #43c5aa;
+}
+
+.edit-message__button.c {
+    color: #d170da;
+}
+
+.edit-message__button.c:hover {
+    color: white;
+    font-size: 18px;
+    border-color: #d170da;
+    background-color: #272822;
+}
+
+/*Python Channel Styling */
+
+.edit-message__div.python {
+    color: #a5d6fd;
+    border: 1px solid #d78d4c;
+}
+
+.edit-message__div.python.right {
+    align-self: flex-end;
+}
+
+.edit-message__div.python:hover {
+    border: 1px solid #8a501e;
+}
+
+.edit-message__span.python {
+    color: #f1746d;
+}
+
+.edit-message__h5.python {
+    color: #b18ed7;
+}
+
+.edit-message__button.python {
+    color: #d78d4c;
+}
+
+.edit-message__button.python:hover {
+    color: white;
+    font-size: 18px;
+    border-color: #d78d4c;
+    background-color: #272822;
+}
+
+@media only screen and (min-width: 780px) {
+    .edit-message__div.python, .edit-message__div.c, .edit-message__div.javascript {
+        width: 40%;
+    }
+}

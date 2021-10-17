@@ -1,0 +1,211 @@
+/*JavaScript Channel Styling */
+
+.display-message__div--javascript {
+    background-color: #272822;
+    color: #E6DB74;
+    font-family: ui-monospace;
+    font-size: 20px;
+    margin: 25px;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid gray;
+    position: relative;
+    display: inline-block;
+}
+
+.tri-right.left-top.right:before {
+    content: ' ';
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: auto;
+    right: 37px;
+    bottom: -22px;
+    border: 11px solid;
+    border-color: white white transparent transparent;
+}
+
+.tri-right.left-top.right:after {
+    content: ' ';
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: auto;
+    right: 38px;
+    bottom: -20px;
+    border: 12px solid;
+    border-color: #272822 #272822 transparent transparent;
+}
+
+.tri-right.left-top:before {
+    content: ' ';
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: 37px;
+    right: auto;
+    top: auto;
+    bottom: -22px;
+    border: 11px solid;
+    border-color: white transparent transparent white;
+}
+
+.tri-right.left-top:after {
+    content: ' ';
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: 38px;
+    right: auto;
+    top: auto;
+    bottom: -20px;
+    border: 12px solid;
+    border-color: #272822 transparent transparent #272822
+}
+
+.display-message__div--javascript.right {
+    align-self: flex-end;
+}
+
+.display-message__div--javascript.right:hover {
+    background-color: #222529;
+    border: 1px solid white;
+    margin-top: 24px;
+}
+
+.display-message__span--javascript {
+    color: #66D9EF;
+    font-style: italic;
+    font-family: ui-monospace;
+    font-size: 20px;
+}
+
+.display-message__h5--javascript {
+    color: #A6E22E;
+    font-family: ui-monospace;
+    font-size: 20px;
+}
+
+.display-message__button--javascript {
+    color: #F92672;
+    font-family: ui-monospace;
+    font-size: 20px;
+}
+
+.display-message__button--javascript:hover {
+    color: #F92672;
+    font-family: ui-monospace;
+    font-size: 18px;
+}
+
+.display-message__text {
+    padding-left: 10px;
+    margin: 10px;
+    white-space: pre-line;
+}
+
+/*C# Channel Styling */
+
+.display-message__div--c {
+    background-color: #272822;
+    color: #e47f51;
+    font-family: ui-monospace;
+    font-size: 20px;
+    margin: 25px;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid white;
+    position: relative;
+    display: inline-block;
+}
+
+.display-message__div--c.right {
+    align-self: flex-end;
+}
+
+.display-message__div--c.right:hover {
+    background-color: #222529;
+    border: 1px solid white;
+    margin-top: 24px;
+}
+
+.display-message__span--c {
+    color: #5caae8;
+    font-style: italic;
+    font-family: ui-monospace;
+    font-size: 20px;
+}
+
+.display-message__h5--c {
+    color: #43c5aa;
+    font-family: ui-monospace;
+    font-size: 20px;
+}
+
+.display-message__button--c {
+    color: #d170da;
+    font-family: ui-monospace;
+    font-size: 20px;
+}
+
+.display-message__button--c:hover {
+    color: #d170da;
+    font-family: ui-monospace;
+    font-size: 18px;
+}
+
+/*Python Channel Styling */
+
+.display-message__div--python {
+    background-color: #272822;
+    color: #a5d6fd;
+    font-family: ui-monospace;
+    font-size: 20px;
+    margin: 25px;
+    padding: 15px;
+    border-radius: 5px;
+    border: .33px solid white;
+    position: relative;
+    display: inline-block;
+}
+
+.display-message__div--python.right {
+    align-self: flex-end;
+}
+
+.display-message__div--python.right:hover {
+    background-color: #222529;
+    border: 1px solid white;
+    margin-top: 24px;
+}
+
+.display-message__span--python {
+    color: #f1746d;
+    font-style: italic;
+    font-family: ui-monospace;
+    font-size: 20px;
+}
+
+.display-message__h5--python {
+    color: #b18ed7;
+    font-family: ui-monospace;
+    font-size: 20px;
+}
+
+.display-message__button--python {
+    color: #d78d4c;
+    font-family: ui-monospace;
+    font-size: 20px;
+}
+
+.display-message__button--python:hover {
+    color: #d78d4c;
+    font-family: ui-monospace;
+    font-size: 18px;
+}
+
+@media only screen and (min-width: 780px) {
+    .display-message__div--python, .display-message__div--c, .display-message__div--javascript {
+        width: 40%;
+    }
+}

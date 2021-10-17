@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Col, Row, Button, Form, FormGroup, Label, Input } from 'reactstrap'
 import { SignUpProps } from './SignUpContainer'
+import './Form.css'
 
 interface SignUpState {
     [key: string]: string
@@ -15,7 +16,9 @@ class SignUp extends React.PureComponent<SignUpProps> {
 
     public render() {
         return (
-            <Form onSubmit={this.handleSubmit}>
+            <Form
+                className="form"
+                onSubmit={this.handleSubmit}>
                 <Row form>
                     <Col md={6}>
                         <FormGroup>
@@ -30,7 +33,7 @@ class SignUp extends React.PureComponent<SignUpProps> {
                         </FormGroup>
                     </Col>
                 </Row>
-                <Row>
+                <Row form>
                     <Col md={6}>
                         <FormGroup>
                             <Label for="password">Password</Label>
@@ -44,7 +47,12 @@ class SignUp extends React.PureComponent<SignUpProps> {
                         </FormGroup>
                     </Col>
                 </Row>
-                <Button color="info">Sign Up!</Button>
+                <span className="form__span">
+                    <Button
+                        className="form__button"
+                        color="warning"
+                        outline>Sign Up!</Button>
+                </span>
                 <br />
                 {this.props.errors && this.props.errors}
             </Form>

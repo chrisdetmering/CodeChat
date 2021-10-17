@@ -1,0 +1,24 @@
+.form {
+    border: 1px solid white;
+    padding: 15px;
+}
+
+.form .form-row {
+    flex-direction: column;
+    align-items: center;
+}
+
+.form__span {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form__button {
+    border-color: white;
+}
+
+.form__button:hover {
+    background: inherit;
+    color: white;
+}

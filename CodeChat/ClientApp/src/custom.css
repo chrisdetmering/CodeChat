@@ -1,4 +1,10 @@
 /* Provide sufficient contrast against white background */
+
+body {
+  background: #1B1B1B;
+  color: white;
+}
+
 a {
   color: #0366d6;
 }

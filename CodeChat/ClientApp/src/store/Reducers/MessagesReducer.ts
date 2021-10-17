@@ -39,7 +39,7 @@ interface ReceiveMessagesAction {
     messages: Messages
 }
 
-interface DeleteMessageSuccessAction {
+export interface DeleteMessageSuccessAction {
     type: 'DELETE_MESSAGE_SUCCESS'
     message: Message
 }
@@ -152,17 +152,18 @@ export const reducer: Reducer<MessagesState> = (state = initialState, incomingAc
         case 'RECEIVE_MESSAGE':
             const oldState = Object.assign({}, state)
             const newMessages = {
+                [action.message.id]: action.message,
                 ...oldState.messages,
-                [action.message.id]: action.message
+
             }
             return {
                 ...state,
                 messages: newMessages
             }
         case 'EDIT_MESSAGE_SUCCESS':
-            const oldEditState = Object.assign({}, state)
+            const oldEditState = Object.assign({}, state.messages)
             const newEditMessages = {
-                ...oldEditState.messages,
+                ...oldEditState,
                 [action.message.id]: action.message
             }
             return {
@@ -171,16 +172,12 @@ export const reducer: Reducer<MessagesState> = (state = initialState, incomingAc
             }
 
         case 'DELETE_MESSAGE_SUCCESS':
-            const oldDeleteState = Object.assign({}, state)
-            action.message.text = 'Message was deleted'
+            const newMsg = Object.assign({}, state.messages)
 
-            const newDeleteMessages = {
-                ...oldDeleteState.messages,
-                [action.message.id]: action.message
-            }
+            delete newMsg[action.message.id]
             return {
                 ...state,
-                messages: newDeleteMessages
+                messages: newMsg
             }
         case 'MESSAGES_ERROR':
             return {

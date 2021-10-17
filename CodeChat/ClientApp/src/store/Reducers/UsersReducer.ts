@@ -4,7 +4,6 @@ import { AppThunkAction } from '../'
 import { LogoutCurrentUserAction } from './SessionsReducer'
 
 
-
 export interface UsersState {
     users: Users
     errors: string | null

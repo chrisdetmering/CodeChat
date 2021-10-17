@@ -32,6 +32,6 @@ const mapDispatch = {
 const connector = connect(mapState, mapDispatch)
 
 type PropsFromRedux = ConnectedProps<typeof connector>
-export type ChannelProps = PropsFromRedux & RouteComponentProps
+export type ChannelsProps = PropsFromRedux & RouteComponentProps
 
 export default connector(Channels)

@@ -1,3 +1,36 @@
-.channel__message {
-    color: red;
+.channel__row {
+    overflow: auto;
+    display: flex;
+    flex-direction: column-reverse;
+    height: 600px;
+    scrollbar-width: 4px;
+}
+
+.channel__col {
+    display: flex;
+    flex-direction: column;
+}
+
+.active {
+    background: black;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+/* Track */
+
+::-webkit-scrollbar-track {
+    background: white;
+    border: 4px solid transparent;
+    background-clip: content-box;
+    /* THIS IS IMPORTANT */
+}
+
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+    background: white;
+    border: 1px solid white;
 }

@@ -51,5 +51,24 @@ namespace CodeChat.Controllers
                     }
               );
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteChannel(Guid id)
+        {
+
+        
+
+            var channel = await _context.Channels.FindAsync(id);
+          
+            _context.Channels.Remove(channel);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+
+
+
+
     }
 }

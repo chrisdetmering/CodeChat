@@ -1,6 +1,7 @@
 import { Action, Reducer } from 'redux'
 import { AppThunkAction } from '../'
 import { ReceiveMessageAction } from './MessagesReducer'
+import { DeleteMessageSuccessAction } from "./MessagesReducer";
 
 
 export interface ChannelsState {
@@ -50,7 +51,7 @@ interface IsChannelsLoadingAction {
 
 
 //ACTION UNION
-type KnownAction = RequestChannelsAction | ReceiveChannelsAction | ReceiveMessageAction | ReceiveChannelAction | IsChannelsLoadingAction | GetChannelsErrorAction
+type KnownAction = RequestChannelsAction | ReceiveChannelsAction | ReceiveMessageAction | ReceiveChannelAction | IsChannelsLoadingAction | GetChannelsErrorAction | DeleteMessageSuccessAction
 
 //ACTION CREATORS 
 export const receiveChannels = (channels: Channels): ReceiveChannelsAction => ({ type: 'RECEIVE_CHANNELS', channels: channels })
@@ -94,6 +95,16 @@ export const reducer: Reducer<ChannelsState> = (state = initialState, incomingAc
             return {
                 ...state,
                 channels
+            }
+        case 'DELETE_MESSAGE_SUCCESS':
+            const newChannel = Object.assign({}, state.channels[action.message.channelId])
+            newChannel.messagesIds = newChannel.messagesIds.filter(id => id !== action.message.id)
+            const newChannels = Object.assign({}, state.channels)
+            newChannels[newChannel.id] = newChannel
+
+            return {
+                ...state,
+                channels: newChannels
             }
         case 'IS_CHANNELS_LOADING':
             return {

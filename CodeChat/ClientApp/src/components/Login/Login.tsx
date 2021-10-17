@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Col, Row, Button, Form, FormGroup, Label, Input } from 'reactstrap'
 import { LoginProps } from './LoginContainer'
-
+import '../SignUp/Form.css'
 interface LoginState {
     [key: string]: string
 }
@@ -16,7 +16,9 @@ class Login extends React.PureComponent<LoginProps> {
     public render() {
 
         return (
-            <Form onSubmit={this.handleSubmit}>
+            <Form
+                className="form"
+                onSubmit={this.handleSubmit}>
                 <Row form>
                     <Col md={6}>
                         <FormGroup>
@@ -31,7 +33,7 @@ class Login extends React.PureComponent<LoginProps> {
                         </FormGroup>
                     </Col>
                 </Row>
-                <Row>
+                <Row form>
                     <Col md={6}>
                         <FormGroup>
                             <Label for="password">Password</Label>
@@ -45,7 +47,12 @@ class Login extends React.PureComponent<LoginProps> {
                         </FormGroup>
                     </Col>
                 </Row>
-                <Button color="info">Login!</Button>
+                <span className="form__span">
+                    <Button
+                        className="form__button"
+                        color="warning"
+                        outline>Login!</Button>
+                </span>
                 <br />
                 {this.props.errors && this.props.errors}
             </Form>

@@ -27,10 +27,10 @@ export const selectMessages = (state: ApplicationState): Message[] => {
 export const selectMessageByIds = (state: ApplicationState, ids: string[]): Message[] => {
 
     if (Object.keys(state.entities.messages.messages).length > 0) {
+        // debugger;
         const messages = ids.map(id => {
             return state.entities.messages.messages[id]
         });
-
         return messages
     }
     return []

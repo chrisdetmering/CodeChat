@@ -16,9 +16,9 @@
       "es2015",
       "dom"
     ],
-    "skipLibCheck": false
+    "skipLibCheck": false,
   },
   "include": [
     "src"
-  ]
+  ],
 }

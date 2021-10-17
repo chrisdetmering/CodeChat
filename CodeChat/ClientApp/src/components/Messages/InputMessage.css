@@ -1,0 +1,60 @@
+.input-message__textarea {
+    background-color: #272822;
+    font-family: ui-monospace;
+    font-size: 20px;
+    padding: 15px;
+    width: 100%;
+    resize: none;
+}
+
+.input-message__textarea:focus-visible {
+    outline: none;
+    box-shadow: none;
+}
+
+.input-message__div {
+    border: 1px solid gray;
+    background-color: #272822;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-message__div:hover {
+    border: 1px solid white;
+}
+
+.button {
+    width: 40px;
+    align-self: flex-end;
+    margin: 3px;
+    border-radius: 5px;
+    background-color: inherit;
+}
+
+.input-message__textarea.javascript {
+    color: #E6DB74;
+}
+
+.button.javascript {
+    background: #E6DB74;
+}
+
+.input-message__textarea.c {
+    color: #e47f51;
+}
+
+.button.c {
+    background: #e47f51;
+}
+
+.input-message__textarea.python {
+    color: #a5d6fd;
+}
+
+.button.python {
+    background: #a5d6fd;
+}
+
+.button:hover:not(:disabled) {
+    border: 1px solid white
+}

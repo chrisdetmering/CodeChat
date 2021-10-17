@@ -15,13 +15,15 @@ export default class NavMenu extends React.PureComponent<NavProps> {
             <header>
                 <Navbar className="navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3" light>
                     <Container>
-                        <NavbarBrand tag={Link} to="/">CodeChat</NavbarBrand>
+                        <NavbarBrand
+                            tag={Link}
+
+                            to="/"><span className="brand">CodeChat</span></NavbarBrand>
                         <NavbarToggler onClick={this.toggle} className="mr-2" />
-                        <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={this.state.isOpen} navbar>
-                            <ul className="navbar-nav flex-grow">
-                                {this.renderSignUpLoginOrLogout()}
-                            </ul>
-                        </Collapse>
+                        <ul className="navbar-nav flex-grow">
+                            {this.renderSignUpLoginOrLogout()}
+                        </ul>
+
                     </Container>
                 </Navbar>
             </header>
@@ -38,10 +40,10 @@ export default class NavMenu extends React.PureComponent<NavProps> {
         if (this.props.currentUser === null) {
             return (<React.Fragment >
                 <NavItem>
-                    <NavLink tag={Link} className="text-dark" to="/">Login</NavLink>
+                    <NavLink tag={Link} className="nav-menu__nav-link" to="/">Login</NavLink>
                 </NavItem>
                 <NavItem>
-                    <NavLink tag={Link} className="text-dark" to="/signup">Sign Up</NavLink>
+                    <NavLink tag={Link} className="nav-menu__nav-link" to="/signup">Sign Up</NavLink>
                 </NavItem>
             </React.Fragment>
             );
@@ -51,6 +53,8 @@ export default class NavMenu extends React.PureComponent<NavProps> {
                 <NavItem>
                     <Button
                         color="warning"
+                        outline
+                        className="nav-menu__button"
                         onClick={this.logout}>Logout</Button>
                 </NavItem>
             </React.Fragment>)
