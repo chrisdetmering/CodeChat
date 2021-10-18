@@ -55,10 +55,37 @@ public async Task<User> CreateUserAsync(UserCredentialsDTO userCredentials)
             }
 
 ```
-
-Interfaces used for custom services following the design by contract 
+Endpoints designed to be as simple as possible
 ```c#
- public interface IUserService
+      [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteMessage(Guid id)
+        {
+
+            var sessionToken = HttpContext.Request.Cookies["sessionToken"];
+            if (!_userService.IsAuthorized(sessionToken))
+            {
+                return Unauthorized(new { message = "You are unauthorized" });
+            }
+
+
+
+            var message = await _context.Messages.FindAsync(id);
+            if (message == null)
+            {
+                return NotFound();
+            }
+
+            _context.Messages.Remove(message);
+            await _context.SaveChangesAsync();
+
+            return Ok(id);
+        }
+
+```
+
+Interfaces
+```c#
+      public interface IUserService
     {
         Task<User> CreateUserAsync(UserCredentialsDTO userCredentials);
         Task<User> LoginUser(UserCredentialsDTO userCredentials);
