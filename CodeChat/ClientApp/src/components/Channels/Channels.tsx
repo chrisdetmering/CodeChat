@@ -22,7 +22,7 @@ class Channels extends React.PureComponent<ChannelsProps>{
     state: ChannelsState = {
         hubConnection: null,
         messageText: '',
-        activeChannelId: '1410da4f-0d9a-42f7-b05d-194791149eba',
+        activeChannelId: '334d3eb0-2fc8-11ec-adcc-4f831b687dbd',
         editMessage: { id: '', text: '', username: '', channelId: '' }
     }
 

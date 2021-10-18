@@ -34,7 +34,7 @@ namespace CodeChat
             services.AddSignalR();
             services.AddDbContext<ChatContext>(options =>
             {
-                options.UseNpgsql("Host=localhost;Database=code_chat;Username=postgres;Password=ChrisSQL;Include Error Detail=true");
+                options.UseNpgsql("Host=fanny.db.elephantsql.com;Database=jfdxugrn;Username=jfdxugrn;Password=x5CqdEqRwlEQmPRGAKfMS2tBhUIMPvJU;");
             });
             //services.AddMvc().AddJsonOptions(o =>
             //{
