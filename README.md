@@ -1,14 +1,15 @@
-# Twitter Me Now
+# Code Chat
 
-[See it live!](https://twitter-me-now.herokuapp.com/)
+[See it live!](https://code-chat.azurewebsites.net/)
 
-Note: You have to have a twitter account to sign in :)
 
 ## Tech Stack
 
-* Node & Express
-* React Hooks
-* Twitter API v1.1
+* C#/.NET
+* React 
+* Redux
+* TypeScript 
+* Postgres
 
 
   
@@ -38,60 +39,33 @@ Search Twitter and get back relevant tweets.
 Custom percent encode function following the [RFC 3986, Section 2.1](https://datatracker.ietf.org/doc/html/rfc3986#section-2.1) specs
 
 
-```javascript
- const ASCII_CHARACTERS = [
-  '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
-'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 
-'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 
-'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 
-'s', 't', 'u', 'v', 'w', 'x', 'y','z', '-', '.', '_','~']; 
+```c#
+[HttpGet]
+        public async Task<ActionResult<Dictionary<Guid, ChannelResponseDTO>>> GetChannels()
+        {
+            var sessionToken = HttpContext.Request.Cookies["sessionToken"];
+            if (!_userService.IsAuthorized(sessionToken))
+            {
+                return Unauthorized(new { message = "You are unauthorized" });
+            }
+            var channels = _context.Channels.Include(c => c.Messages);
+           
 
-
-const percentEncode = (string) => { 
-
-  let encodedString = ''; 
-  string.split("").forEach(char => {
-      if (ASCII_CHARACTERS.includes(char)) { 
-        encodedString += char; 
-      } else { 
-        const encoded = '%' + char.charCodeAt(0).toString(16); 
-        encodedString += encoded.toUpperCase(); 
-      }
-  });
-
-  return encodedString; 
-}
+            return await channels.ToDictionaryAsync(
+                    c => c.Id,
+                    c => new ChannelResponseDTO
+                    {
+                        Id = c.Id,
+                        Name = c.Name,
+                        MessagesIds = c.Messages.OrderBy(m => m.CreatedAt).Select(m => m.Id)
+                    }
+              );
+        }
 ```
 
 Made custom TwitterApi class to handle authorizing requests to Twitter endpoints
-```javascript
- class TwitterApi { 
-  constructor() { 
-    this.baseUrl = undefined;
-    this.parameters = [];
-    this.oauth_token = undefined;
-    this.oauth_token_secret = undefined;
-    this.queryParams = []; 
-    this.body = undefined; 
-  }
-  
-  get(baseUrl, queryParams) { 
-    this.setBaseUrl(baseUrl);
-    this.setQueryParams(queryParams); 
-    return this.request("GET"); 
-  }
+```c#
 
-  
-  post(baseUrl, queryParams, body) { 
-    this.setBaseUrl(baseUrl);
-    this.setQueryParams(queryParams); 
-    return this.request("POST", body); 
-  }
-
-  setBaseUrl(baseUrl) { 
-    this.baseUrl = baseUrl; 
-  }
 ```
 
 
