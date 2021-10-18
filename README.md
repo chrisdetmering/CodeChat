@@ -35,7 +35,7 @@ You can delete messages, but only your own
   
 ## Code Examples
 
-Proper Error Handling
+Clean and expressive code 
 
 
 ```c#
