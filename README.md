@@ -19,7 +19,7 @@
 
 Implemented live chat with SignalR chatHub 
 
-![hippo](https://media.giphy.com/media/WzkEeAJTQcCeQ1p44z/giphy.gif)
+![hippo](https://media.giphy.com/media/XOW0VwnwkmmCfwh55J/giphy.gif)
 
 #### Edit Messages
 Edit messages in real time 
