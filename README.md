@@ -25,7 +25,7 @@ Implemented live chat with SignalR chatHub
 #### Edit Messages
 Edit messages in real time 
 
-![hippo](https://media.giphy.com/media/Qy2xgc1DYKRSjXI8wy/giphy.gif)
+![hippo](https://media.giphy.com/media/6TR86DVZKvDMzx3Ipw/giphy.gif)
 
 
 #### Delete Messages
