@@ -55,7 +55,7 @@ public async Task<User> CreateUserAsync(UserCredentialsDTO userCredentials)
             }
 
 ```
-Endpoints designed to be as simple as possible
+Simple and effective endpoint design 
 ```c#
       [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMessage(Guid id)
@@ -83,18 +83,6 @@ Endpoints designed to be as simple as possible
 
 ```
 
-Interfaces
-```c#
-      public interface IUserService
-    {
-        Task<User> CreateUserAsync(UserCredentialsDTO userCredentials);
-        Task<User> LoginUser(UserCredentialsDTO userCredentials);
-        User FindUserBySessionToken(string sessionToken);
-        UserLoggedInDTO ToDTO(User user);
-        bool IsAuthorized(string sessionToken);
-    }
-
-```
 
 
 ## Author
