@@ -31,7 +31,7 @@ Edit messages in real time
 #### Delete Messages
 You can delete messages, but only your own 
 
-![hippo](https://media.giphy.com/media/qnSbLI79r9dvt5EYZe/giphy.gif)
+![hippo](https://media.giphy.com/media/UPrRPZUoShpSi8hE5w/giphy.gif)
   
   
 ## Code Examples
