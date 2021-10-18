@@ -10,6 +10,7 @@
 * Redux
 * TypeScript 
 * Postgres
+* SignalR
 
 
   
